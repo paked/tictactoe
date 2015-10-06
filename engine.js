@@ -33,33 +33,33 @@ Game.prototype.draw = function() {
 }
 
 Game.prototype.add = function(object) {
+    console.log(object);
     _entities.push(object);
 }
 
-function Entity(graphic, position) {
+function Entity(graphic, size, position) {
     this.position = position || {x: 100, y: 100};
-    this.graphic = graphic;
+    this.size = size || {width: 50, height: 50};
+    this.graphic = graphic || new RectangleGraphic();
 
     this.graphic.position = this.position;
+    this.graphic.size = this.size;
 }
 
 Entity.prototype.draw = function(ctx) {
     this.graphic.draw(ctx);
 }
 
-Entity.prototype.update = function() {
-    // this.position.x += 1;
-    // this.position.y += 1;
-}
+Entity.prototype.update = function() {}
 
 function RectangleGraphic(color, width, height) {
     this.color = color || "#DDD";
-    this.width = width || 50;
     this.height = height || 50;
     this.position;
+    this.size;
 }
 
 RectangleGraphic.prototype.draw = function(ctx) {
     ctx.fillStyle = this.color;
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    ctx.fillRect(this.position.x, this.position.y, this.size.width, this.size.height);
 }
