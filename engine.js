@@ -1,14 +1,13 @@
 var _entities = [];
 var _context;
-var ctx;
 
 function Game(canvasID, width, height, fps) {
     var self = this;
 
     var canvas = document.getElementById(canvasID);
-    ctx = canvas.getContext("2d");
-    ctx.canvas.width = width || 500;
-    ctx.canvas.height = height || 500;
+    this.ctx = canvas.getContext("2d");
+    this.ctx.canvas.width = width || 500;
+    this.ctx.canvas.height = height || 500;
 
     fps = fps || 30;
 
@@ -25,9 +24,11 @@ Game.prototype.update = function() {
 }
 
 Game.prototype.draw = function() {
-    ctx.clearRect(0, 0, 500, 500);
+    var self = this;
+
+    this.ctx.clearRect(0, 0, 500, 500);
     _entities.forEach(function(entity) {
-        entity.draw();
+        entity.draw(self.ctx);
     });
 }
 
@@ -35,19 +36,30 @@ Game.prototype.add = function(object) {
     _entities.push(object);
 }
 
-function Entity() {
-    this.color = "#DDD";
-    this.x = 40;
-    this.y = 40;
+function Entity(graphic, position) {
+    this.position = position || {x: 100, y: 100};
+    this.graphic = graphic;
+
+    this.graphic.position = this.position;
 }
 
-Entity.prototype.draw = function() {
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, 100, 100);
+Entity.prototype.draw = function(ctx) {
+    this.graphic.draw(ctx);
 }
 
 Entity.prototype.update = function() {
-    this.x += 1;
-    this.y += 1;
+    // this.position.x += 1;
+    // this.position.y += 1;
 }
 
+function RectangleGraphic(color, width, height) {
+    this.color = color || "#DDD";
+    this.width = width || 50;
+    this.height = height || 50;
+    this.position;
+}
+
+RectangleGraphic.prototype.draw = function(ctx) {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+}
