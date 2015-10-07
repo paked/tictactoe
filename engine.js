@@ -1,6 +1,5 @@
-var _entities = [];
-
 function Game(canvasID, width, height, fps) {
+    Group.call(this);
     var self = this;
 
     var canvas = document.getElementById(canvasID);
@@ -18,9 +17,12 @@ function Game(canvasID, width, height, fps) {
 
     setInterval(function() {
         self.update();
-        self.draw();
+        self.draw(self.ctx);
     }, 1000/fps);
 }
+
+Game.prototype = Object.create(Group.prototype);
+Game.prototype.contstructor = Game;
 
 Game.prototype.set = function(self, func) {
     return function(event) {
@@ -29,15 +31,15 @@ Game.prototype.set = function(self, func) {
 }
 
 Game.prototype._click = function(event) {
-    for (var i = 0; i < _entities.length; i++) {
-        var entity = _entities[i];
+    for (var i = 0; i < this._contents.length; i++) {
+        var entity = this._contents[i];
 
         if (typeof entity.onClick == 'function') {
             entity.onClick({x: event.x - this.xOffset, y: event.y - this.yOffset});
         }
     }
 }
-
+/*
 Game.prototype.update = function() {
     _entities.forEach(function(entity) {
         entity.update();
@@ -56,7 +58,7 @@ Game.prototype.draw = function() {
 Game.prototype.add = function(object) {
     console.log(object);
     _entities.push(object);
-}
+}*/
 
 function Entity(graphic, size, position) {
     this.position = position || {x: 100, y: 100};
@@ -93,3 +95,25 @@ RectangleGraphic.prototype.draw = function(ctx) {
     ctx.fillStyle = this.color;
     ctx.fillRect(this.position.x, this.position.y, this.size.width, this.size.height);
 }
+
+function Group() {
+    console.log(arguments)
+    this._contents = [];
+}
+
+Group.prototype.add = function(entity) {
+    this._contents.push(entity);
+}
+
+Group.prototype.draw = function(ctx) {
+    this._contents.forEach(function(entity) {
+        entity.draw(ctx);
+    });
+}
+
+Group.prototype.update = function(ctx) {
+    this._contents.forEach(function(entity) {
+        entity.update();
+    });
+}
+
