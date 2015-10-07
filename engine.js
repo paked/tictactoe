@@ -1,4 +1,4 @@
-function Game(canvasID, width, height, fps) {
+function Game(canvasID, width, height, functions, fps) {
     Group.call(this);
     var self = this;
 
@@ -15,9 +15,13 @@ function Game(canvasID, width, height, fps) {
 
     fps = fps || 30;
 
-    setInterval(function() {
-        self.update();
-        self.draw(self.ctx);
+    document.addEventListener("DOMContentLoaded", function(event) {
+        functions.create();
+
+        setInterval(function() {
+            self.update();
+            self.draw(self.ctx);
+        });
     }, 1000/fps);
 }
 
@@ -97,7 +101,6 @@ RectangleGraphic.prototype.draw = function(ctx) {
 }
 
 function Group() {
-    console.log(arguments)
     this._contents = [];
 }
 
