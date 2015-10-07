@@ -1,6 +1,8 @@
 var TILE_SIZE = 75;
 var TILE_SPACING = 5;
-var game = new Game("board", 500, 500);
+var BOARD_SIZE = (TILE_SIZE + TILE_SPACING) * 3;
+
+var game = new Game("board", BOARD_SIZE, BOARD_SIZE);
 
 function Tile(xIndex, yIndex) {
     Entity.call(this,
@@ -12,7 +14,10 @@ function Tile(xIndex, yIndex) {
 Tile.prototype = Object.create(Entity.prototype);
 Tile.prototype.constructor = Tile; // Reset the constructor from Entity to Tile
 
-game.add(new Tile(2, 2));
+Tile.prototype.onClick = function(position) {
+    console.log(position);
+}
+
 for (var y = 0; y < 3; y++) {
     for (var x = 0; x < 3; x++) {
         game.add(new Tile(x, y));

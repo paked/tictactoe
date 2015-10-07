@@ -1,13 +1,18 @@
 var _entities = [];
-var _context;
 
 function Game(canvasID, width, height, fps) {
     var self = this;
 
     var canvas = document.getElementById(canvasID);
+
     this.ctx = canvas.getContext("2d");
     this.ctx.canvas.width = width || 500;
     this.ctx.canvas.height = height || 500;
+
+    canvas.addEventListener("mousedown", this.set(self, this._click), false);
+
+    this.xOffset = canvas.offsetLeft;
+    this.yOffset = canvas.offsetTop;
 
     fps = fps || 30;
 
@@ -15,6 +20,22 @@ function Game(canvasID, width, height, fps) {
         self.update();
         self.draw();
     }, 1000/fps);
+}
+
+Game.prototype.set = function(self, func) {
+    return function(event) {
+        func.call(self, event);
+    };
+}
+
+Game.prototype._click = function(event) {
+    for (var i = 0; i < _entities.length; i++) {
+        var entity = _entities[i];
+
+        if (typeof entity.onClick == 'function') {
+            entity.onClick({x: event.x - this.xOffset, y: event.y - this.yOffset});
+        }
+    }
 }
 
 Game.prototype.update = function() {
