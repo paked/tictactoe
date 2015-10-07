@@ -71,6 +71,15 @@ Entity.prototype.draw = function(ctx) {
     this.graphic.draw(ctx);
 }
 
+Entity.prototype.overlapPoint = function(point) {
+    if (point.x > this.position.x && point.x < this.position.x + this.size.width &&
+        point.y > this.position.y && point.y < this.position.y + this.size.height) {
+        return true;
+    }
+
+    return false;
+}
+
 Entity.prototype.update = function() {}
 
 function RectangleGraphic(color, width, height) {

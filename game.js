@@ -15,7 +15,9 @@ Tile.prototype = Object.create(Entity.prototype);
 Tile.prototype.constructor = Tile; // Reset the constructor from Entity to Tile
 
 Tile.prototype.onClick = function(position) {
-    console.log(position);
+    if (this.overlapPoint(position)) {
+        this.graphic.color = "rgb(100, 100, 230)";
+    }
 }
 
 for (var y = 0; y < 3; y++) {
