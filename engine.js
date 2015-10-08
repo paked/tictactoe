@@ -120,3 +120,11 @@ Group.prototype.update = function(ctx) {
     });
 }
 
+Group.prototype.onClick = function(point) {
+    this._contents.forEach(function(entity) {
+        if (typeof entity.onClick == 'function') {
+            entity.onClick(point);
+        }
+    });
+}
+
