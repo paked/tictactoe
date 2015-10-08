@@ -64,7 +64,7 @@ Game.prototype.add = function(object) {
     _entities.push(object);
 }*/
 
-function Entity(graphic, size, position) {
+function Entity(graphic, position, size) {
     this.position = position || {x: 100, y: 100};
     this.size = size || {width: 50, height: 50};
     this.graphic = graphic || new RectangleGraphic();
@@ -88,9 +88,8 @@ Entity.prototype.overlapPoint = function(point) {
 
 Entity.prototype.update = function() {}
 
-function RectangleGraphic(color, width, height) {
+function RectangleGraphic(color) {
     this.color = color || "#DDD";
-    this.height = height || 50;
     this.position;
     this.size;
 }
@@ -98,6 +97,20 @@ function RectangleGraphic(color, width, height) {
 RectangleGraphic.prototype.draw = function(ctx) {
     ctx.fillStyle = this.color;
     ctx.fillRect(this.position.x, this.position.y, this.size.width, this.size.height);
+}
+
+function TextGraphic(text, color) {
+    console.log("text graphic");
+    this.text = text || "";
+    this.color = color || 'rgb(20, 200, 30)';
+    this.position;
+    this.size;
+}
+
+TextGraphic.prototype.draw = function(ctx) {
+    ctx.fillStyle = this.color;
+    ctx.fillText(this.text, this.position.x, this.position.y);
+    console.log(this.position);
 }
 
 function Group() {

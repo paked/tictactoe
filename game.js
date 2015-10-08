@@ -1,10 +1,12 @@
 var TILE_SIZE = 75;
+var TOP_MARGIN = 25;
 var TILE_SPACING = 5;
 var BOARD_SIZE = (TILE_SIZE + TILE_SPACING) * 3;
 
-var game = new Game("board", BOARD_SIZE, BOARD_SIZE, {create: create});
+var game = new Game("board", BOARD_SIZE, TOP_MARGIN + BOARD_SIZE, {create: create});
 
 var tiles;
+var text;
 function create() {
     tiles = new Group();
 
@@ -15,13 +17,17 @@ function create() {
     }
 
     game.add(tiles);
+
+    text = new Entity(new TextGraphic("Tic Tac Toe"), {x: 10, y:10}, {});
+
+    game.add(text);
 }
 
 function Tile(xIndex, yIndex) {
     Entity.call(this,
                 new RectangleGraphic(),
-                {width: TILE_SIZE, height: TILE_SIZE},
-                {x: xIndex * (TILE_SIZE + TILE_SPACING), y: yIndex * (TILE_SIZE + TILE_SPACING)});
+                {x: xIndex * (TILE_SIZE + TILE_SPACING), y: TOP_MARGIN + yIndex * (TILE_SIZE + TILE_SPACING)},
+                {width: TILE_SIZE, height: TILE_SIZE});
 }
 
 Tile.prototype = Object.create(Entity.prototype);
@@ -32,4 +38,3 @@ Tile.prototype.onClick = function(position) {
         this.graphic.color = "rgb(100, 100, 230)";
     }
 }
-
