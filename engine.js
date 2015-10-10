@@ -43,26 +43,6 @@ Game.prototype._click = function(event) {
         }
     }
 }
-/*
-Game.prototype.update = function() {
-    _entities.forEach(function(entity) {
-        entity.update();
-    });
-}
-
-Game.prototype.draw = function() {
-    var self = this;
-
-    this.ctx.clearRect(0, 0, 500, 500);
-    _entities.forEach(function(entity) {
-        entity.draw(self.ctx);
-    });
-}
-
-Game.prototype.add = function(object) {
-    console.log(object);
-    _entities.push(object);
-}*/
 
 function Entity(graphic, position, size) {
     this.position = position || {x: 100, y: 100};
@@ -110,7 +90,7 @@ function TextGraphic(text, color) {
 TextGraphic.prototype.draw = function(ctx) {
     ctx.fillStyle = this.color;
     ctx.fillText(this.text, this.position.x, this.position.y);
-    console.log(this.position);
+    //console.log(this.position);
 }
 
 function Group() {
