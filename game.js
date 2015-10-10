@@ -5,21 +5,15 @@ var BOARD_SIZE = (TILE_SIZE + TILE_SPACING) * 3;
 
 var game = new Game("board", BOARD_SIZE, TOP_MARGIN + BOARD_SIZE, {create: create});
 
-var tiles;
+var board;
 var text;
+
 function create() {
-    tiles = new Group();
-
-    for (var y = 0; y < 3; y++) {
-        for (var x = 0; x < 3; x++) {
-            tiles.add(new Tile(x, y));
-        }
-    }
-
-    game.add(tiles);
+    board = new Board();
 
     text = new Entity(new TextGraphic("Tic Tac Toe"), {x: 10, y:10}, {});
 
+    game.add(board);
     game.add(text);
 }
 
@@ -38,3 +32,16 @@ Tile.prototype.onClick = function(position) {
         this.graphic.color = "rgb(100, 100, 230)";
     }
 }
+
+function Board() {
+    Group.call(this);
+
+    for (var y = 0; y < 3; y++) {
+        for (var x = 0; x < 3; x++) {
+            this.add(new Tile(x, y));
+        }
+    }
+}
+
+Board.prototype = Object.create(Group.prototype);
+Board.prototype.contstructor = Game;
