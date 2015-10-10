@@ -20,6 +20,8 @@ function Game(canvasID, width, height, functions, fps) {
 
         setInterval(function() {
             self.update();
+            self.ctx.fillStyle = "rgb(255, 250, 250)";
+            self.ctx.fillRect(0, 0, width, height);
             self.draw(self.ctx);
         });
     }, 1000/fps);
