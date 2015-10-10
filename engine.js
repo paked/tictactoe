@@ -84,7 +84,7 @@ RectangleGraphic.prototype.draw = function(ctx) {
 function TextGraphic(text, color, font) {
     console.log("text graphic");
     this.text = text || "";
-    this.color = color || 'rgb(20, 200, 30)';
+    this.color = color || 'black';
     this.font = font || '14px Helvetica';
     this.position;
     this.size;
