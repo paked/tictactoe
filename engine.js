@@ -81,18 +81,19 @@ RectangleGraphic.prototype.draw = function(ctx) {
     ctx.fillRect(this.position.x, this.position.y, this.size.width, this.size.height);
 }
 
-function TextGraphic(text, color) {
+function TextGraphic(text, color, font) {
     console.log("text graphic");
     this.text = text || "";
     this.color = color || 'rgb(20, 200, 30)';
+    this.font = font || '14px Helvetica';
     this.position;
     this.size;
 }
 
 TextGraphic.prototype.draw = function(ctx) {
     ctx.fillStyle = this.color;
-    ctx.fillText(this.text, this.position.x, this.position.y);
-    //console.log(this.position);
+    ctx.font = this.font;
+    ctx.fillText(this.text, this.position.x + ctx.canvas.offsetLeft, this.position.y + ctx.canvas.offsetTop);
 }
 
 function Group() {

@@ -11,7 +11,7 @@ var text;
 function create() {
     board = new Board();
 
-    text = new Entity(new TextGraphic("Tic Tac Toe"), {x: 10, y:10}, {});
+    text = new Entity(new TextGraphic("Tic Tac Toe"), {x: 0, y:0}, {});
 
     game.add(board);
     game.add(text);
