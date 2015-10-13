@@ -1,7 +1,8 @@
 var TILE_SIZE = 75;
 var TOP_MARGIN = 25;
 var TILE_SPACING = 5;
-var BOARD_SIZE = (TILE_SIZE + TILE_SPACING) * 3;
+var BOARD_TILES = 3;
+var BOARD_SIZE = (TILE_SIZE + TILE_SPACING) * BOARD_TILES;
 
 var game = new Game("board", BOARD_SIZE, TOP_MARGIN + BOARD_SIZE, {create: create});
 
@@ -22,6 +23,9 @@ function Tile(xIndex, yIndex) {
                 new RectangleGraphic(),
                 {x: xIndex * (TILE_SIZE + TILE_SPACING), y: TOP_MARGIN + yIndex * (TILE_SIZE + TILE_SPACING)},
                 {width: TILE_SIZE, height: TILE_SIZE});
+
+    this._xIndex = xIndex;
+    this._yIndex = yIndex;
 }
 
 Tile.prototype = Object.create(Entity.prototype);
@@ -29,18 +33,25 @@ Tile.prototype.constructor = Tile; // Reset the constructor from Entity to Tile
 
 Tile.prototype.onClick = function(position) {
     if (this.overlapPoint(position)) {
-        this.graphic.color = board.getPlayer();//"rgb(100, 100, 230)";
-        board.makeMove(0);
+        this.graphic.color = board.getPlayer();
+        board.makeMove({x: this._xIndex, y: this._yIndex});
     }
 }
 
 function Board() {
     Group.call(this);
 
-    for (var y = 0; y < 3; y++) {
-        for (var x = 0; x < 3; x++) {
+    this.real = []
+
+    for (var y = 0; y < BOARD_TILES; y++) {
+        var row = [];
+        for (var x = 0; x < BOARD_TILES; x++) {
             this.add(new Tile(x, y));
+
+            row.push(3);
         }
+
+        this.real.push(row);
     }
 
     this.totalTurns = 0;
@@ -51,6 +62,8 @@ Board.prototype = Object.create(Group.prototype);
 Board.prototype.contstructor = Game;
 
 Board.prototype.makeMove = function(move) {
+    this.real[move.y][move.x] = this.getTurn();
+
     this.totalTurns++;
 }
 
@@ -64,4 +77,24 @@ Board.prototype.getPlayer = function() {
     }
 
     return "orange";
+}
+
+Board.prototype.toString = function() {
+    output = "";
+    for (var y = 0; y < BOARD_TILES; y++) {
+        output += this.real[y].map(function(v) {
+            if (v == 3) {
+                return " ";
+            }
+
+            if (v == 0) {
+                return "x";
+            }
+            
+            return "o";
+        }).join(" ");
+        output += "\n";
+    }
+
+    console.log(output);
 }
