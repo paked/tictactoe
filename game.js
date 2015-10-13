@@ -29,7 +29,8 @@ Tile.prototype.constructor = Tile; // Reset the constructor from Entity to Tile
 
 Tile.prototype.onClick = function(position) {
     if (this.overlapPoint(position)) {
-        this.graphic.color = "rgb(100, 100, 230)";
+        this.graphic.color = board.getPlayer();//"rgb(100, 100, 230)";
+        board.makeMove(0);
     }
 }
 
@@ -41,7 +42,26 @@ function Board() {
             this.add(new Tile(x, y));
         }
     }
+
+    this.totalTurns = 0;
+    this.playerCount = 2;
 }
 
 Board.prototype = Object.create(Group.prototype);
 Board.prototype.contstructor = Game;
+
+Board.prototype.makeMove = function(move) {
+    this.totalTurns++;
+}
+
+Board.prototype.getTurn = function() {
+    return this.totalTurns % this.playerCount;
+}
+
+Board.prototype.getPlayer = function() {
+    if (this.getTurn() == 0) {
+        return "rgb(100, 100, 230)"
+    }
+
+    return "orange";
+}
