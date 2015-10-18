@@ -35,6 +35,7 @@ Tile.prototype.onClick = function(position) {
     if (this.overlapPoint(position)) {
         this.graphic.color = board.getPlayer();
         board.makeMove({x: this._xIndex, y: this._yIndex});
+        // board.hasWon(board.getTurn() - 1);
     }
 }
 
@@ -64,11 +65,18 @@ Board.prototype.contstructor = Game;
 Board.prototype.makeMove = function(move) {
     this.real[move.y][move.x] = this.getTurn();
 
+    var won = this.hasWon(this.getTurn());
     this.totalTurns++;
+
+    return won;
 }
 
 Board.prototype.getTurn = function() {
-    return this.totalTurns % this.playerCount;
+    if (this.totalTurns % 2 == 0) {
+        return 0;
+    }
+
+    return 1;
 }
 
 Board.prototype.getPlayer = function() {
@@ -93,8 +101,53 @@ Board.prototype.toString = function() {
             
             return "o";
         }).join(" ");
+
         output += "\n";
     }
 
     console.log(output);
+}
+
+Board.prototype.hasWon = function(player) {
+    console.log("Current player %s", player);
+    this.toString();
+    // horizontal check
+    for (var y = 0; y < BOARD_TILES; y++) {
+        var x = 0;
+        while (x < BOARD_TILES) {
+            if (this.real[y][x] != player) {
+                break;
+            }
+
+            x++;
+
+            if (x == BOARD_TILES) {
+                alert("potato!");
+                return true;
+            }
+        }
+    }
+
+    // vertical check
+    for (var x = 0; x < BOARD_TILES; x++) {
+        var y = 0;
+        while (y < BOARD_TILES) {
+            if (this.real[y][x] != player) {
+                break;
+            }
+
+            y++;
+
+            if (y == BOARD_TILES) {
+                alert("vertical potato!");
+                return true;
+            }
+        }
+    }
+
+    // diagonal right->left
+
+    // diagonal left->right
+    
+    return false;
 }
