@@ -35,14 +35,13 @@ Tile.prototype.onClick = function(position) {
     if (this.overlapPoint(position)) {
         this.graphic.color = board.getPlayer();
         board.makeMove({x: this._xIndex, y: this._yIndex});
-        // board.hasWon(board.getTurn() - 1);
     }
 }
 
 function Board() {
     Group.call(this);
 
-    this.real = []
+    this.real = [];
 
     for (var y = 0; y < BOARD_TILES; y++) {
         var row = [];
@@ -144,10 +143,37 @@ Board.prototype.hasWon = function(player) {
             }
         }
     }
-
-    // diagonal right->left
-
-    // diagonal left->right
     
+    // right diagonal check
+    var i = 0;
+    while (i < BOARD_TILES) {
+        if (this.real[i][i] != player) {
+            break;
+        }
+
+        i++;
+
+        if (i == BOARD_TILES) {
+            alert("RIGHT-DIAG POTATO");
+            return true;
+        }
+    }
+    
+    // right vertical check
+    i = 0;
+    while (i < BOARD_TILES) {
+        if (this.real[this.real.length - 1  - i][i] != player) {
+            break;
+        }
+
+        i++;
+
+        if (i == BOARD_TILES) {
+            alert("LEFT-DIAG POTATO");
+            return true;
+        }
+    }
+
     return false;
+
 }
