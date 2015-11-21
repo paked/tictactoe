@@ -67,13 +67,50 @@ function update() {
                 if (board.getTurn() == PLAYER_TWO) {
                     if (board.totalTurns == 1) {
                         // do player one things
-                        if (board.real[2][2] == PLAYER_ONE) {
+                        if (board.real[1][1] == PLAYER_ONE) {
                             // choose a corner
+                            board.makeMove({x: 0, y: 0});
                         } else {
                             // go in center
+                            board.makeMove({x:1, y:1});
                         }
                     } else if (board.totalTurns == 3) {
+                        var ptrn = matchPattern();
+                        if (ptrn.res) {
+                            board.makeMove(ptrn.pos);
+                        } else {
+                            if (board.valid({x: 0, y: 0})) {
+                                board.makeMove({x: 0, y: 0});
+                                return;
+                            } else if (board.valid({x: 2, y: 0})) {
+                                board.makeMove({x: 2, y: 0});
+                                return;
+                            } else if (board.valid({x: 2, y: 2})) {
+                                board.makeMove({x: 2, y: 2});
+                                return;
+                            } else if (board.valid({x: 0, y: 2})) {
+                                board.makeMove({x: 0, y: 2});
+                                return;
+                            }
+                        }
                         // If there are two Xs and a space in a line (in any order) then go in that space. Otherwise if there are two Os and a space in a line then go in that space. Otherwise go in a free corner.
+                    } else if (board.totalTurns == 5) {
+                        var ptrn = matchPattern();
+                        if (ptrn.res) {
+                            board.makeMove(ptrn.pos);
+                        } else {
+                            var turn;
+                            while (true) {
+                                turn = getMove();
+
+                                if (board.valid(turn) || board.totalTurns == 9) {
+                                    break;
+                                }
+                            }
+
+                            board.makeMove(turn);
+                            return;
+                        }
                     }
                 }
 
@@ -82,6 +119,112 @@ function update() {
         }
     } else {
         // manual move
+    }
+}
+
+function matchPattern() {
+    function newMatch() {
+        var match = {
+            space: false,
+            space_pos: {x: -1, y: -1},
+            x_mark: 0,
+            y_mark: 0
+        }
+
+        return match;
+    }
+
+    function markMatch(match, ch) {
+        if (ch == 3) {
+            match.space = true;
+            match.space_pos.x = x;
+            match.space_pos.y = y;
+        } else if (ch == PLAYER_ONE) {
+            match.x_mark += 1;
+        } else if (ch == PLAYER_TWO) {
+            match.y_mark += 1;
+        }
+    }
+
+    function validMark(match) {
+        return match.space && (match.x_mark > 1 || match.y_mark > 1);
+    }
+
+    var match = newMatch();
+
+    // horizontal check
+    for (var y = 0; y < BOARD_TILES; y++) {
+        var x = 0;
+        while (x < BOARD_TILES) {
+            var ch = board.real[y][x];
+            markMatch(match, ch);
+
+            if (validMark(match)) {
+                return {
+                    res: true,
+                    pos: match.space_pos
+                }
+            }
+
+            x++;
+        }
+    }
+
+    match = newMatch();
+
+    // vertical check
+    for (var x = 0; x < BOARD_TILES; x++) {
+        var y = 0;
+        while (y < BOARD_TILES) {
+            var ch = board.real[y][x];
+            markMatch(match, ch);
+            if (validMark(match)) {
+                return {
+                    res: true,
+                    pos: match.space_pos
+                }
+            }
+
+            y++;
+        }
+    }
+
+    match = newMatch();
+    
+    // right diagonal check
+    var i = 0;
+    while (i < BOARD_TILES) {
+        var ch = board.real[i][i];
+        markMatch(match, ch);
+        if (validMark(match)) {
+            return {
+                res: true,
+                pos: match.space_pos
+            }
+        }
+
+        i++;
+    }
+
+    match = newMatch();
+    
+    // right vertical check
+    i = 0;
+    while (i < BOARD_TILES) {
+        var ch = board.real[board.real.length - 1 - i][i];
+        markMatch(match, ch);
+        if (validMark(mark)) {
+            return {
+                res: true,
+                pos: match.space_pos
+            }
+        }
+
+        i++;
+    }
+    
+    return {
+        res: false
     }
 }
 
@@ -157,6 +300,11 @@ Board.prototype.makeMove = function(move) {
 
     this.totalTurns++;
 
+    if (won) {
+        alert("Player " + this.getTurn() + " has won!");
+        window.location.href = "index.html";
+    }
+
     return won;
 }
 
@@ -211,7 +359,6 @@ Board.prototype.hasWon = function(player) {
             x++;
 
             if (x == BOARD_TILES) {
-                alert("potato!");
                 return true;
             }
         }
@@ -228,7 +375,6 @@ Board.prototype.hasWon = function(player) {
             y++;
 
             if (y == BOARD_TILES) {
-                alert("vertical potato!");
                 return true;
             }
         }
@@ -244,7 +390,6 @@ Board.prototype.hasWon = function(player) {
         i++;
 
         if (i == BOARD_TILES) {
-            alert("RIGHT-DIAG POTATO");
             return true;
         }
     }
@@ -259,11 +404,9 @@ Board.prototype.hasWon = function(player) {
         i++;
 
         if (i == BOARD_TILES) {
-            alert("LEFT-DIAG POTATO");
             return true;
         }
     }
 
     return false;
-
 }
