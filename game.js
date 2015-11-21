@@ -44,7 +44,6 @@ function create() {
     text = new Entity(new TextGraphic("Tic Tac Toe"), {x: 0, y:0}, {});
 
     game.add(board);
-    game.add(text);
 }
 
 function update() {
