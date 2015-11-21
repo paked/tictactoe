@@ -1,32 +1,21 @@
 <html>
     <head>
-        <title>A game</title>
+        <title>
+            TicTacToe
+        </title>
     </head>
 
     <body>
-        <h1>Tic Tac Toe</h1>
-        <form>
-            <input type="radio" name="difficulty" value="manual">Manual<br>
-            <input type="radio" name="difficulty" value="easy">Easy<br>
-            <input type="radio" name="difficulty" value="hard">Hard<br>
+        <canvas id="board" width="500px" height="500px">
+        </canvas>
 
-            <br>
+        <h2>Rules</h2>
+        <ul>
+            <li>You can only take your turn inside the boxes</li>
+            <li>Be nice to your co-player (Even if they're a bot!)</li>
+        </ul>
 
-            <input id="submit" type="submit" />
-        </form>
-
-        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-
-        <script>
-            $(document).ready(function() {
-                $('#submit').click(function(e) {
-                    e.preventDefault();
-
-                    var diff = $('input[name=difficulty]:checked').val(); 
-
-                    $(location).attr('href', 'index.html#' + diff);
-                });
-            });
-        </script>
+        <script src="engine.js"></script>
+        <script src="game.js"></script>
     </body>
 </html>
