@@ -7,6 +7,8 @@ var MODE_EASY = 0;
 var MODE_HARD = 1;
 var MODE_MANUAL = 2;
 var MODE = MODE_EASY;
+var PLAYER_ONE = 0;
+var PLAYER_TWO = 1;
 
 var game = new Game("board", BOARD_SIZE, TOP_MARGIN + BOARD_SIZE, {create: create, update: update});
 
@@ -14,6 +16,29 @@ var board;
 var text;
 
 function create() {
+    var hash = window.location.hash;
+    if (hash[0] == '#') {
+        hash = hash.substr(1);
+    }
+
+    switch(hash) {
+        case "easy": {
+            MODE = MODE_EASY;
+            break;
+        }
+        case "manual": {
+            MODE = MODE_MANUAL;
+            break;
+        }
+        case "hard": {
+            MODE = MODE_HARD;
+            break;
+        }
+        default: {
+            alert("invalid difficulty" + hash);
+        }
+    }
+
     board = new Board();
 
     text = new Entity(new TextGraphic("Tic Tac Toe"), {x: 0, y:0}, {});
@@ -26,7 +51,7 @@ function update() {
     if (board.getTurn()) {
         switch(MODE) {
             case MODE_EASY: {
-                // move into random posiitno
+                // move into random position
                 var turn;
                 while (true) {
                     turn = getMove();
@@ -37,9 +62,23 @@ function update() {
                 }
 
                 board.makeMove(turn);
+                break;
             }
             case MODE_HARD: {
+                if (board.getTurn() == PLAYER_TWO) {
+                    if (board.totalTurns == 1) {
+                        // do player one things
+                        if (board.real[2][2] == PLAYER_ONE) {
+                            // choose a corner
+                        } else {
+                            // go in center
+                        }
+                    } else if (board.totalTurns == 3) {
+                        // If there are two Xs and a space in a line (in any order) then go in that space. Otherwise if there are two Os and a space in a line then go in that space. Otherwise go in a free corner.
+                    }
+                }
 
+                break;
             }
         }
     } else {
@@ -124,10 +163,10 @@ Board.prototype.makeMove = function(move) {
 
 Board.prototype.getTurn = function() {
     if (this.totalTurns % 2 == 0) {
-        return 0;
+        return PLAYER_ONE;
     }
 
-    return 1;
+    return PLAYER_TWO;
 }
 
 Board.prototype.getPlayer = function() {
