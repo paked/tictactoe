@@ -19,6 +19,7 @@ function Game(canvasID, width, height, functions, fps) {
         functions.create();
 
         setInterval(function() {
+            functions.update();
             self.update();
             self.ctx.fillStyle = "rgb(255, 250, 250)";
             self.ctx.fillRect(0, 0, width, height);
@@ -124,3 +125,7 @@ Group.prototype.onClick = function(point) {
     });
 }
 
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}

@@ -3,8 +3,12 @@ var TOP_MARGIN = 25;
 var TILE_SPACING = 5;
 var BOARD_TILES = 3;
 var BOARD_SIZE = (TILE_SIZE + TILE_SPACING) * BOARD_TILES;
+var MODE_EASY = 0;
+var MODE_HARD = 1;
+var MODE_MANUAL = 2;
+var MODE = MODE_EASY;
 
-var game = new Game("board", BOARD_SIZE, TOP_MARGIN + BOARD_SIZE, {create: create});
+var game = new Game("board", BOARD_SIZE, TOP_MARGIN + BOARD_SIZE, {create: create, update: update});
 
 var board;
 var text;
@@ -16,6 +20,38 @@ function create() {
 
     game.add(board);
     game.add(text);
+}
+
+function update() {
+    if (board.getTurn()) {
+        switch(MODE) {
+            case MODE_EASY: {
+                // move into random posiitno
+                var turn;
+                while (true) {
+                    turn = getMove();
+
+                    if (board.valid(turn) || board.totalTurns == 9) {
+                        break;
+                    }
+                }
+
+                board.makeMove(turn);
+            }
+            case MODE_HARD: {
+
+            }
+        }
+    } else {
+        // manual move
+    }
+}
+
+function getMove() {
+    return {
+        x: getRandomInt(0, BOARD_TILES - 1),
+        y: getRandomInt(0, BOARD_TILES - 1)
+    }
 }
 
 function Tile(xIndex, yIndex) {
@@ -32,7 +68,7 @@ Tile.prototype = Object.create(Entity.prototype);
 Tile.prototype.constructor = Tile; // Reset the constructor from Entity to Tile
 
 Tile.prototype.onClick = function(position) {
-    if (this.overlapPoint(position)) {
+    if (this.overlapPoint(position) && (MODE == MODE_MANUAL || board.getTurn() == 0)) {
         this.graphic.color = board.getPlayer();
         board.makeMove({x: this._xIndex, y: this._yIndex});
     }
@@ -61,10 +97,26 @@ function Board() {
 Board.prototype = Object.create(Group.prototype);
 Board.prototype.contstructor = Game;
 
+Board.prototype.valid = function(move) {
+    if (this.real[move.y][move.x] == undefined) {
+        return false;
+    }
+
+    if (this.real[move.y][move.x] != 3) {
+        return false;
+    }
+
+    return true;
+}
+
 Board.prototype.makeMove = function(move) {
     this.real[move.y][move.x] = this.getTurn();
 
     var won = this.hasWon(this.getTurn());
+
+    var tile = this._contents[move.y * BOARD_TILES + move.x];
+    tile.graphic.color = board.getPlayer();
+
     this.totalTurns++;
 
     return won;
